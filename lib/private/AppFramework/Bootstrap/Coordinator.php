@@ -40,9 +40,6 @@ use function in_array;
 
 class Coordinator {
 
-	/** @var IAppManager */
-	private $appManager;
-
 	/** @var ServerContainer */
 	private $serverContainer;
 
@@ -119,7 +116,7 @@ class Coordinator {
 		 */
 		try {
 			/** @var App $application */
-			$application = \OC::$server->query($applicationClassName);
+			$application = $this->serverContainer->query($applicationClassName);
 			if ($application instanceof IBootstrap) {
 				/** @var BootContext $context */
 				$context = new BootContext($application->getContainer());

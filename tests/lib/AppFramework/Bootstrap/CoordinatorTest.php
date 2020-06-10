@@ -28,15 +28,32 @@ namespace lib\AppFramework\Bootstrap;
 use OC\AppFramework\Bootstrap\Coordinator;
 use OC\ServerContainer;
 use OCP\App\IAppManager;
+use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\QueryException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class CoordinatorTest extends TestCase {
 
+	/** @var IAppManager|MockObject */
 	private $appManager;
+
+	/** @var ServerContainer|MockObject */
 	private $serverContainer;
+
+	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
+
+	/** @var ILogger|MockObject */
+	private $logger;
+
+	/** @var Coordinator */
+	private $coordinator;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -44,13 +61,57 @@ class CoordinatorTest extends TestCase {
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->serverContainer = $this->createMock(ServerContainer::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
+		$this->logger = $this->createMock(ILogger::class);
 
 		$this->coordinator = new Coordinator(
-			$this->appManager,
 			$this->serverContainer,
 			$this->eventDispatcher,
-			$this->createMock(ILogger::class)
+			$this->logger
 		);
+	}
+
+	public function testBootAppNotLoadable(): void {
+		$appId = 'settings';
+		$this->serverContainer->expects($this->once())
+			->method('query')
+			->with(\OCA\Settings\AppInfo\Application::class)
+			->willThrowException(new QueryException(""));
+		$this->logger->expects($this->once())
+			->method('logException');
+
+		$this->coordinator->bootApp($appId);
+	}
+
+	public function testBootAppNotBootable(): void {
+		$appId = 'settings';
+		$mockApp = $this->createMock(\OCA\Settings\AppInfo\Application::class);
+		$this->serverContainer->expects($this->once())
+			->method('query')
+			->with(\OCA\Settings\AppInfo\Application::class)
+			->willReturn($mockApp);
+
+		$this->coordinator->bootApp($appId);
+	}
+
+	public function testBootApp(): void {
+		$appId = 'settings';
+		$mockApp = new class extends App implements IBootstrap {
+			public function __construct() {
+				parent::__construct('test', []);
+			}
+
+			public function register(IRegistrationContext $context): void {
+			}
+
+			public function boot(IBootContext $context): void {
+			}
+		};
+		$this->serverContainer->expects($this->once())
+			->method('query')
+			->with(\OCA\Settings\AppInfo\Application::class)
+			->willReturn($mockApp);
+
+		$this->coordinator->bootApp($appId);
 	}
 
 }

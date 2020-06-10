@@ -35,7 +35,7 @@ use Throwable;
 class RegistrationContext {
 
 	/** @var array[] */
-	private $capabilities;
+	private $capabilities = [];
 
 	/** @var array[] */
 	private $services = [];
@@ -73,6 +73,10 @@ class RegistrationContext {
 			}
 
 			public function registerCapability(string $capability): void {
+				$this->context->registerCapability(
+					$this->appId,
+					$capability
+				);
 			}
 
 			public function registerService(string $name, callable $factory, bool $shared = true): void {
@@ -143,7 +147,7 @@ class RegistrationContext {
 	}
 
 	public function registerParameter(string $appId, string $name, $value): void {
-		$this->aliases[] = [
+		$this->parameters[] = [
 			"appId" => $appId,
 			"name" => $name,
 			"value" => $value,
@@ -170,9 +174,9 @@ class RegistrationContext {
 	 * @param App[] $apps
 	 */
 	public function delegateCapabilityRegistrations(array $apps): void {
-		foreach ($this->capabilities as $appId => $registration) {
+		foreach ($this->capabilities as $registration) {
 			try {
-				$apps[$appId]
+				$apps[$registration['appId']]
 					->getContainer()
 					->registerCapability($registration['capability']);
 			} catch (Throwable $e) {
@@ -274,9 +278,9 @@ class RegistrationContext {
 	 * @param App[] $apps
 	 */
 	public function delegateMiddlewareRegistrations(array $apps): void {
-		foreach ($this->middlewares as $appId => $middleware) {
+		foreach ($this->middlewares as $middleware) {
 			try {
-				$apps[$appId]
+				$apps[$middleware['appId']]
 					->getContainer()
 					->registerMiddleWare($middleware['class']);
 			} catch (Throwable $e) {
