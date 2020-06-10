@@ -176,6 +176,7 @@ class ShareAPIController extends OCSController {
 			'token' => null,
 			'uid_file_owner' => $share->getShareOwner(),
 			'note' => $share->getNote(),
+			'personal_note' => $share->getPersonalNote(),
 			'label' => $share->getLabel(),
 			'displayname_file_owner' => $shareOwner !== null ? $shareOwner->getDisplayName() : $share->getShareOwner(),
 		];
@@ -947,6 +948,7 @@ class ShareAPIController extends OCSController {
 		string $publicUpload = null,
 		string $expireDate = null,
 		string $note = null,
+		string $personalNote = null,
 		string $label = null,
 		string $hideDownload = null
 	): DataResponse {
@@ -973,6 +975,7 @@ class ShareAPIController extends OCSController {
 			$publicUpload === null &&
 			$expireDate === null &&
 			$note === null &&
+			$personalNote === null &&
 			$label === null &&
 			$hideDownload === null
 		) {
@@ -981,6 +984,10 @@ class ShareAPIController extends OCSController {
 
 		if ($note !== null) {
 			$share->setNote($note);
+		}
+
+		if ($personalNote !== null) {
+			$share->setPersonalNote($personalNote);
 		}
 
 		/**

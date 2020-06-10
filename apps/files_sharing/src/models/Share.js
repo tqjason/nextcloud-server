@@ -254,6 +254,27 @@ export default class Share {
 	}
 
 	/**
+	 * Get the share note if any
+	 *
+	 * @returns {string}
+	 * @readonly
+	 * @memberof Share
+	 */
+	get personalNote() {
+		return this.#share.personal_note
+	}
+
+	/**
+	 * Set the share note if any
+	 *
+	 * @param {string} note the note
+	 * @memberof Share
+	 */
+	set personalNote(note) {
+		this.#share.personal_note = note
+	}
+
+	/**
 	 * Have a mail been sent
 	 *
 	 * @returns {boolean}

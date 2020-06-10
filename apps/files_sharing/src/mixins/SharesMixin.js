@@ -97,6 +97,21 @@ export default {
 			},
 		},
 
+		/**
+		 * Does the current share have a personal note
+		 * @returns {boolean}
+		 */
+		hasPersonalNote: {
+			get: function() {
+				return this.share.personalNote !== ''
+			},
+			set: function(enabled) {
+				this.share.personalNote = enabled
+					? null // enabled but user did not changed the content yet
+					: '' // empty = no note = disabled
+			},
+		},
+
 		dateTomorrow() {
 			return moment().add(1, 'days')
 		},
@@ -191,6 +206,14 @@ export default {
 		},
 
 		/**
+		 * Personal note changed, let's save it to a different key
+		 * @param {String} note the personal share note
+		 */
+		onPersonalNoteChange(note) {
+			this.$set(this.share, 'newPersonalNote', note.trim())
+		},
+
+		/**
 		 * When the note change, we trim, save and dispatch
 		 *
 		 * @param {string} note the note
@@ -200,6 +223,19 @@ export default {
 				this.share.note = this.share.newNote
 				this.$delete(this.share, 'newNote')
 				this.queueUpdate('note')
+			}
+		},
+
+		/**
+		 * When the peronal note changes, we trim, save, and dispatch the note.
+		 *
+		 * @param {string} note the personal note
+		 */
+		onPersonalNoteSubmit() {
+			if (this.share.newPersonalNote) {
+				this.share.personalNote = this.share.newPersonalNote
+				this.$delete(this.share, 'newPersonalNote')
+				this.queueUpdate('personalNote')
 			}
 		},
 

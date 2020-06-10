@@ -123,6 +123,27 @@
 						@update:value="onNoteChange"
 						@submit="onNoteSubmit" />
 				</template>
+
+				<!-- personal note -->
+				<ActionCheckbox
+					:checked.sync="hasPersonalNote"
+					:disabled="saving"
+					@uncheck="queueUpdate('personalNote')">
+					{{ t('files_sharing', 'Note to self') }}
+				</ActionCheckbox>
+				<ActionTextEditable v-if="hasPersonalNote"
+					ref="personalNote"
+					v-tooltip.auto="{
+						content: errors.note,
+						show: errors.note,
+						trigger: 'manual'
+					}"
+					:class="{ error: errors.note }"
+					:disabled="saving"
+					:value="share.newPersonalNote || share.personalNote"
+					icon="icon-edit"
+					@update:value="onPersonalNoteChange"
+					@submit="onPersonalNoteSubmit" />
 			</template>
 
 			<ActionButton v-if="share.canDelete"

@@ -69,6 +69,8 @@ class Share implements \OCP\Share\IShare {
 	private $status;
 	/** @var string */
 	private $note = '';
+	/** @var string */
+	private $personalNote = '';
 	/** @var \DateTime */
 	private $expireDate;
 	/** @var string */
@@ -355,6 +357,24 @@ class Share implements \OCP\Share\IShare {
 	public function getNote() {
 		if (is_string($this->note)) {
 			return $this->note;
+		}
+		return '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setPersonalNote($note) {
+		$this->personalNote = $note;
+		return $this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPersonalNote() {
+		if (is_string($this->personalNote)) {
+			return $this->personalNote;
 		}
 		return '';
 	}

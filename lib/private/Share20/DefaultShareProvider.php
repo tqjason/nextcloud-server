@@ -265,6 +265,7 @@ class DefaultShareProvider implements IShareProvider {
 				->set('file_source', $qb->createNamedParameter($share->getNode()->getId()))
 				->set('expiration', $qb->createNamedParameter($share->getExpirationDate(), IQueryBuilder::PARAM_DATE))
 				->set('note', $qb->createNamedParameter($share->getNote()))
+				->set('personal_note', $qb->createNamedParameter($share->getPersonalNote()))
 				->set('accepted', $qb->createNamedParameter($share->getStatus()))
 				->execute();
 		} elseif ($share->getShareType() === \OCP\Share::SHARE_TYPE_GROUP) {
@@ -278,6 +279,7 @@ class DefaultShareProvider implements IShareProvider {
 				->set('file_source', $qb->createNamedParameter($share->getNode()->getId()))
 				->set('expiration', $qb->createNamedParameter($share->getExpirationDate(), IQueryBuilder::PARAM_DATE))
 				->set('note', $qb->createNamedParameter($share->getNote()))
+				->set('personal_note', $qb->createNamedParameter($share->getPersonalNote()))
 				->execute();
 
 			/*
@@ -293,6 +295,7 @@ class DefaultShareProvider implements IShareProvider {
 				->set('file_source', $qb->createNamedParameter($share->getNode()->getId()))
 				->set('expiration', $qb->createNamedParameter($share->getExpirationDate(), IQueryBuilder::PARAM_DATE))
 				->set('note', $qb->createNamedParameter($share->getNote()))
+				->set('personal_note', $qb->createNamedParameter($share->getPersonalNote()))
 				->execute();
 
 			/*
@@ -318,6 +321,7 @@ class DefaultShareProvider implements IShareProvider {
 				->set('token', $qb->createNamedParameter($share->getToken()))
 				->set('expiration', $qb->createNamedParameter($share->getExpirationDate(), IQueryBuilder::PARAM_DATE))
 				->set('note', $qb->createNamedParameter($share->getNote()))
+				->set('personal_note', $qb->createNamedParameter($share->getPersonalNote()))
 				->set('label', $qb->createNamedParameter($share->getLabel()))
 				->set('hide_download', $qb->createNamedParameter($share->getHideDownload() ? 1 : 0), IQueryBuilder::PARAM_INT)
 				->execute();
@@ -1011,6 +1015,7 @@ class DefaultShareProvider implements IShareProvider {
 			->setPermissions((int)$data['permissions'])
 			->setTarget($data['file_target'])
 			->setNote($data['note'])
+			->setPersonalNote($data['personal_note'])
 			->setMailSend((bool)$data['mail_send'])
 			->setStatus((int)$data['accepted'])
 			->setLabel($data['label']);

@@ -340,6 +340,23 @@ interface IShare {
 	 */
 	public function getNote();
 
+	/**
+	 * Attach a personal note to a share
+	 *
+	 * @param string $note
+	 * @return \OCP\Share\IShare The modified object
+	 * @since 20.0.0
+	 */
+	public function setPersonalNote($note);
+
+	/**
+	 * Get personal note attached to a share
+	 *
+	 * @return string
+	 * @since 20.0.0
+	 */
+	public function getPersonalNote();
+
 
 	/**
 	 * Set the expiration date
